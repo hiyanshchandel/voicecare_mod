@@ -10,7 +10,9 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
-CORS(app, origins=["http://localhost:5173", "https://voicecare-ten.vercel.app"])
+CORS(app, resources={r"/*": {"origins": ["http://localhost:5173", "https://voicecare-ten.vercel.app"],
+                             "methods": ["GET", "POST", "OPTIONS"],
+                             "allow_headers": ["Content-Type", "Authorization"]}})
 
 
 from collections import defaultdict
