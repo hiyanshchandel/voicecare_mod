@@ -4,7 +4,6 @@ langchain
 pinecone
 uuid
 langchain-community
-sentence-transformers
 azure-cognitiveservices-speech
 schedule
 flask
