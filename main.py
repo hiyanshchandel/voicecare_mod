@@ -5,8 +5,13 @@ from summary_upsertion import summary_upsert
 import threading
 from vectordb_upsertion import insert_data
 import os
+from flask_cors import CORS
+
 
 app = Flask(__name__)
+
+CORS(app, origins=["http://localhost:5173", "https://voicecare-ten.vercel.app"])
+
 
 from collections import defaultdict
 chat_histories = defaultdict(list)  # Thread-safe initialization
