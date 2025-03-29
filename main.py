@@ -4,6 +4,7 @@ from longterm_memory import summarise
 from summary_upsertion import summary_upsert
 import threading
 from vectordb_upsertion import insert_data
+import os
 
 app = Flask(__name__)
 
