@@ -10,7 +10,15 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
-CORS(app)
+# Allow all origins for now (you can restrict it later)
+CORS(app, resources={r"/": {"origins": ""}}, supports_credentials=True)
+
+@app.after_request
+def add_cors_headers(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    response.headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+    return response
 
 
 from collections import defaultdict
