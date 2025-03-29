@@ -10,3 +10,4 @@ schedule
 flask
 flask_cors
 groq
+gunicorn
