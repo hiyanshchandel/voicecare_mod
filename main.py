@@ -7,37 +7,24 @@ from vectordb_upsertion import insert_data
 import os
 from flask_cors import CORS
 
-
 app = Flask(__name__)
 
-# Allow all origins for now (you can restrict it later)
-CORS(app, resources={r"/": {"origins": ""}}, supports_credentials=True)
+# Allow localhost (for development) and production frontend
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 @app.after_request
 def add_cors_headers(response):
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
     response.headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
     return response
 
-
-from collections import defaultdict
-chat_histories = defaultdict(list)  # Thread-safe initialization
-
-def check_and_summarize(chat_history, username):
-    """Summarize the last 2 messages and upsert into memory."""
-    try:
-        if len(chat_history) >= 2 and len(chat_history) % 2 == 0:
-            summary = summarise(chat_history[-2:])
-            summary_upsert(username, summary)
-    except Exception as e:
-        print(f"Summarization error for {username}: {str(e)}")  # Logging
-
-def summarize_in_background(chat_history, username):
-    """Run summarization in a background thread safely."""
-    chat_history_copy = chat_history[:]
-    thread = threading.Thread(target=check_and_summarize, args=(chat_history_copy, username), daemon=True)
-    thread.start()
+# Handle preflight OPTIONS requests
+@app.route("/voicecare-form", methods=["OPTIONS"])
+@app.route("/voicecare-processing", methods=["OPTIONS"])
+def handle_options():
+    return '', 204
 
 @app.route("/voicecare-processing", methods=["POST"])
 def voicecare_processing():
@@ -49,18 +36,10 @@ def voicecare_processing():
         if not user_query or not username:
             return jsonify({"error": "Missing text or user_id"}), 400
 
-        # Process the text safely
         try:
             response = get_response(user_query, username)
         except Exception as e:
             return jsonify({"error": f"Chatbot processing failed: {str(e)}"}), 500
-
-        # Update chat history
-        chat_histories[username].append({"role": "user", "content": user_query})
-        chat_histories[username].append({"role": "assistant", "content": response})
-
-        # Background summarization
-        summarize_in_background(chat_histories[username], username)
 
         return jsonify({"response": response}), 200
     except Exception as e:
