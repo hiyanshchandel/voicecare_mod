@@ -8,9 +8,21 @@ import os
 from flask_cors import CORS
 
 app = Flask(__name__)
-
+    
 # Configure CORS with specific settings
 CORS(app, supports_credentials=True)
+
+chat_histories = {}
+def check_and_summarize(chat_history, username):
+    """Summarize the last 2 messages and upsert into memory."""
+    if len(chat_history) >= 2 and len(chat_history) % 2 == 0:
+        summary = summarise(chat_history[-2:])
+        summary_upsert(username, summary)
+
+def summarize_in_background(chat_history, username):
+    """Run summarization in a background thread safely."""
+    chat_history_copy = chat_history[:]
+    threading.Thread(target=check_and_summarize, args=(chat_history_copy, username), daemon=True).start()
 
 @app.after_request
 def add_cors_headers(response):
@@ -47,6 +59,9 @@ def voicecare_processing():
 
         try:
             response = get_response(user_query, username)
+            chat_histories[username].append({"role": "user", "content": user_query})
+            chat_histories[username].append({"role": "assistant", "content": response})
+            summarize_in_background(chat_histories[username], username)
             return jsonify({"response": response}), 200
         except Exception as e:
             return jsonify({"error": f"Chatbot processing failed: {str(e)}"}), 500
