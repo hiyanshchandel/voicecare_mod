@@ -1,22 +1,20 @@
 from openai import OpenAI
 from langchain.vectorstores import Pinecone
 from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 from pinecone import Pinecone as  pie
 from langchain.chat_models import ChatOpenAI
-import config
 from router import routing
-import re
 import os
-
+from langchain_community.chat_models import ChatOpenAI
+from dotenv import load_dotenv
+load_dotenv()
 pc = pie(api_key = os.environ.get("PINECONE_API_KEY"))
 index = pc.Index(host = "https://voicecaretest3-hilv8lk.svc.aped-4627-b74a.pinecone.io")
 embedding_model = HuggingFaceEmbeddings(model_name=os.environ.get("EMBEDDING_MODEL"))
-embedding_model
 memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 llm = ChatOpenAI(base_url="https://api.groq.com/openai/v1",
-        api_key=os.environ.get("GROQ_API_KEY"), model_name=os.environ.get("SUMMARY_MODEL_NAME")
+        api_key=os.environ.get("GROQ_API_KEY"), model_name=os.environ.get("SUMMARY_MODEL_NAME"))
 
 def search_pinecone(query, user_id):
     query_embedding = embedding_model.embed_query(query)
@@ -64,12 +62,15 @@ def get_response(user_input,user_id):
 
         User Query: {user_input}
         """
-        response = llm.predict(prompt)
-        memory.save_context({"input": user_input}, {"output": response})
-        return response.content if hasattr(response, "content") else str(response) ###??????????
+        
+        response_obj = llm.invoke(prompt)
+        response_text = response_obj.content if hasattr(response_obj, 'content') else str(response_obj)
+        memory.save_context({"input": user_input}, {"output": response_text})
+        print(response_text)
+        return response_text
+
     
     else:
-        print("in mod")
         client = OpenAI(api_key = os.environ.get("OPENAI_API_KEY"))
         response = client.chat.completions.create(
             model = os.environ.get("SEARCH_MODEL"),

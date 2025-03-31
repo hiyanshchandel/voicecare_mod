@@ -6,13 +6,15 @@ import threading
 from vectordb_upsertion import insert_data
 import os
 from flask_cors import CORS
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__)
-    
+chat_histories = {}
 # Configure CORS with specific settings
 CORS(app, supports_credentials=True)
 
-chat_histories = {}
+#chat_histories = {}
 def check_and_summarize(chat_history, username):
     """Summarize the last 2 messages and upsert into memory."""
     if len(chat_history) >= 2 and len(chat_history) % 2 == 0:
@@ -59,6 +61,10 @@ def voicecare_processing():
 
         try:
             response = get_response(user_query, username)
+            if username not in chat_histories:
+                chat_histories[username] = []  # Initialize if not present
+
+
             chat_histories[username].append({"role": "user", "content": user_query})
             chat_histories[username].append({"role": "assistant", "content": response})
             summarize_in_background(chat_histories[username], username)
@@ -81,6 +87,6 @@ def voicecare_form():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 4000))
     debug_mode = os.environ.get("DEBUG", "False").lower() == "true"
     app.run(host="0.0.0.0", port=port, debug=debug_mode)

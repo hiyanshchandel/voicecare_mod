@@ -1,8 +1,10 @@
 from openai import OpenAI
 import os
+from dotenv import load_dotenv
+load_dotenv()
 def routing(user_input):
     client = OpenAI(base_url="https://api.groq.com/openai/v1",
-        api_key=os.environ.get("GROQ_API_KEY")
+        api_key=os.environ.get("GROQ_API_KEY"))
     system_prompt2 = """You are a highly specialized classification AI. Your sole task is to categorize the user's query into one of two predefined categories based on whether it requires real-time internet access or can be answered from existing knowledge.
 
 **Categories:**
@@ -93,4 +95,5 @@ def routing(user_input):
         {"role": "user", "content": user_input}
     ]
     )
+    print(response.choices[0].message.content.strip())
     return response.choices[0].message.content.strip()
