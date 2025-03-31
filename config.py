@@ -1,13 +1,1 @@
-OPENAI_API_KEY = ""
-SUMMARY_MODEL_NAME = "llama-3.3-70b-versatile"
-TEXT_MODEL_NAME = "gpt-3.5-turbo"
-TEMPERATURE = 0.7
-PINECONE_API_KEY = "pcsk_44dzYY_EkJcM1ApCtKs4a7NjBDkGFUM8GWTKdE4xfwu1p8aCLYBKBDyGXQG5GoMzhNpj4w"
-PINECONE_INDEX_NAME  = "voicecare"
-PINECONE_ENV_NAME = "us-east-1"
-EMBEDDING_MODEL = "intfloat/multilingual-e5-large"
-SEARCH_MODEL = "gpt-4o-search-preview"
-GROQ_API_KEY = "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"
-INSTANT_MODEL = "mixtral-8x7b-32768"
-ROUTER_MODEL = "llama-3.3-70b-versatile"
 REMINDER_MODEL = ""
