@@ -1,8 +1,7 @@
 from openai import OpenAI
-import config
 def summarise(chat_history):
     client = OpenAI(base_url="https://api.groq.com/openai/v1",
-        api_key=config.GROQ_API_KEY)
+        api_key=os.environ.get("GROQ_API_KEY")
     ## fix summaries of unrequired topics like news etc return nothing to summarise and then use of if model 
     system_prompt = {
         "role": "system",
@@ -75,7 +74,7 @@ def summarise(chat_history):
     messages = [system_prompt] + chat_history 
 
     response = client.chat.completions.create(
-        model=config.SUMMARY_MODEL_NAME,
+        model=os.environ.get("SUMMARY_MODEL_NAME"),
         messages=messages
     )
     return response.choices[0].message.content.strip()
