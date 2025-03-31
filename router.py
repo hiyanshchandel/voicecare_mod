@@ -1,9 +1,7 @@
 from openai import OpenAI
-import config 
-
 def routing(user_input):
     client = OpenAI(base_url="https://api.groq.com/openai/v1",
-        api_key=config.GROQ_API_KEY)
+        api_key=os.environ.get("GROQ_API_KEY")
     system_prompt2 = """You are a highly specialized classification AI. Your sole task is to categorize the user's query into one of two predefined categories based on whether it requires real-time internet access or can be answered from existing knowledge.
 
 **Categories:**
@@ -88,7 +86,7 @@ def routing(user_input):
 
 
     response = client.chat.completions.create(
-        model = config.ROUTER_MODEL,
+        model = os.environ.get("ROUTER_MODEL"),
         messages=[
         {"role": "system", "content": system_prompt2},  
         {"role": "user", "content": user_input}
