@@ -1,6 +1,7 @@
 from pinecone import Pinecone
 import json
 import uuid
+import os
 
 pc = Pinecone(api_key = os.environ.get("PINECONE_API_KEY"))
 
