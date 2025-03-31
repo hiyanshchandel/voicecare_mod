@@ -9,13 +9,13 @@ import config
 from router import routing
 import re
 
-pc = pie(api_key = config.PINECONE_API_KEY)
+pc = pie(api_key = os.environ.get("PINECONE_API_KEY"))
 index = pc.Index(host = "https://voicecaretest3-hilv8lk.svc.aped-4627-b74a.pinecone.io")
-embedding_model = HuggingFaceEmbeddings(model_name=config.EMBEDDING_MODEL)
+embedding_model = HuggingFaceEmbeddings(model_name=os.environ.get("EMBEDDING_MODEL"))
 embedding_model
 memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 llm = ChatOpenAI(base_url="https://api.groq.com/openai/v1",
-        api_key=config.GROQ_API_KEY, model_name=config.SUMMARY_MODEL_NAME)
+        api_key=os.environ.get("GROQ_API_KEY"), model_name=os.environ.get("SUMMARY_MODEL_NAME")
 
 def search_pinecone(query, user_id):
     query_embedding = embedding_model.embed_query(query)
@@ -69,9 +69,9 @@ def get_response(user_input,user_id):
     
     else:
         print("in mod")
-        client = OpenAI(api_key = config.OPENAI_API_KEY)
+        client = OpenAI(api_key = os.environ.get("OPENAI_API_KEY"))
         response = client.chat.completions.create(
-            model = config.SEARCH_MODEL,
+            model = os.environ.get("SEARCH_MODEL"),
             web_search_options={
                 "user_location": {
             "type": "approximate",
@@ -93,9 +93,9 @@ def get_response(user_input,user_id):
         )
         response_text = response.choices[0].message.content
         client = OpenAI(base_url="https://api.groq.com/openai/v1",
-        api_key=config.GROQ_API_KEY)
+        api_key=os.environ.get("GROQ_API_KEY"))
         response = client.chat.completions.create(
-            model=config.SUMMARY_MODEL_NAME,
+            model=os.environ.get("SUMMARY_MODEL_NAME"),
             messages=[
                 {"role": "system", "content": """You are an expert summarizer creating content for a voice assistant. Your task is to distill the provided text into only its most essential headlines or key points. 
                                                 **Instructions:** 
