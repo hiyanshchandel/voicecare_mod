@@ -8,6 +8,7 @@ from langchain.chat_models import ChatOpenAI
 import config
 from router import routing
 import re
+import os
 
 pc = pie(api_key = os.environ.get("PINECONE_API_KEY"))
 index = pc.Index(host = "https://voicecaretest3-hilv8lk.svc.aped-4627-b74a.pinecone.io")
