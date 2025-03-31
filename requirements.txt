@@ -1,10 +1,8 @@
 openai
-streamlit
 langchain 
 pinecone
 uuid
 langchain-community
-azure-cognitiveservices-speech
 schedule
 flask
 flask-cors
