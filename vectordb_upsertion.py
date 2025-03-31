@@ -1,9 +1,8 @@
 from pinecone import Pinecone
 import json
 import uuid
-import config
 
-pc = Pinecone(api_key = config.PINECONE_API_KEY)
+pc = Pinecone(api_key = os.environ.get("PINECONE_API_KEY"))
 
 index = pc.Index("voicecaretest3")
 def insert_data(data_json):
