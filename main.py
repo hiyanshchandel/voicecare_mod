@@ -10,28 +10,16 @@ from flask_cors import CORS
 app = Flask(__name__)
 
 # Configure CORS with specific settings
-CORS(app, 
-     resources={
-         r"/*": {
-             "origins": ["https://voicecare-ten.vercel.app", "http://localhost:5173"],  # Allow both Vercel and local development
-             "methods": ["GET", "POST", "OPTIONS"],
-             "allow_headers": ["Content-Type", "Authorization", "Accept"],
-             "supports_credentials": True,
-             "expose_headers": ["Content-Type", "Authorization"]
-         }
-     })
+CORS(app, supports_credentials=True)
 
 @app.after_request
 def add_cors_headers(response):
-    # Add CORS headers to every response
-    origin = request.headers.get('Origin')
-    if origin in ["https://voicecare-ten.vercel.app", "http://localhost:5173"]:
-        response.headers["Access-Control-Allow-Origin"] = origin
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, Accept"
-    response.headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "*"
     response.headers["Access-Control-Allow-Credentials"] = "true"
-    response.headers["Access-Control-Max-Age"] = "3600"  # Cache preflight requests for 1 hour
     return response
+
 
 # Handle preflight OPTIONS requests
 @app.route("/voicecare-form", methods=["OPTIONS"])
