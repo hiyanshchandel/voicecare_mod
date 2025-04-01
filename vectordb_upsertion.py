@@ -2,12 +2,9 @@ from pinecone import Pinecone
 import json
 import uuid
 import os
-from dotenv import load_dotenv
-load_dotenv()
-
+from embeddings import create_embeddings
 pc = Pinecone(api_key = os.environ.get("PINECONE_API_KEY"))
-
-index = pc.Index("voicecaretest3")
+index = pc.Index("voicecare5")
 def insert_data(data_json):
     data = data_json  # No need to load again if it's already a dict
     user_id = data['user_id']
@@ -24,14 +21,14 @@ def insert_data(data_json):
     for category, details in categories.items():
         record_id = str(uuid.uuid4())
         text_data = " ".join(f"{k}: {v}" for k, v in details.items())  # Convert dict to text.
-        metadata = [
-            str("user_id :" + str(user_id)),
-            str("category:" + str(category))
+        metadata = {
+            "user_id" : str(user_id),
+            "category": str(category),
+            "content": str(details)
             ##**{k: str(v) if isinstance(v, (int, float, dict, list)) else v for k, v in details.items()}
-        ]
+        }
 
-        records.append({"_id": record_id, "chunk_text": text_data, "metadata": metadata})
-
-    index.upsert_records(namespace = user_id, records = records)
+        records.append({"id": record_id, "values": create_embeddings(json.dumps(details, indent=2)), "metadata": metadata})
+    index.upsert(namespace = user_id, vectors=records)
     print(f"Data for User {user_id} inserted into Pinecone.")
 
