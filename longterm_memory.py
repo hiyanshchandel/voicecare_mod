@@ -9,7 +9,7 @@ def summarise(chat_history):
     system_prompt = {
         "role": "system",
         "content": (
-            """You are an AI assistant creating ultra-concise summaries for an eldercare voice assistant's persistent memory. Your SOLE task is to extract key personal updates, medical information, stated feelings/symptoms, scheduled events/reminders, or changes to emergency contacts provided or confirmed *directly by the USER* in the recent chat messages.
+"""You are an AI assistant creating ultra-concise summaries for an eldercare voice assistant's persistent memory. Your SOLE task is to extract key personal updates, medical information, stated feelings/symptoms, scheduled events/reminders, or changes to emergency contacts provided or confirmed *directly by the USER* in the recent chat messages.
 
 **Critically Important Rules:**
 
