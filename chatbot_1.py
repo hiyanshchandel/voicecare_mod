@@ -17,8 +17,8 @@ llm = ChatOpenAI(base_url="https://api.groq.com/openai/v1",
 
 def search_pinecone(query, user_id):
     query_embedding = create_embeddings(query)
-    results = index.query(namespace = user_id,vector=query_embedding, top_k=2, include_values=False, include_metadata=True)
-    results = [results['matches'][0]['metadata']['chunk_text'] + results['matches'][1]['metadata']['chunk_text']]
+    results = index.query(namespace = user_id,vector=query_embedding, top_k=4, include_values=False, include_metadata=True)
+    results = [results['matches'][0]['metadata']['content'] + results['matches'][1]['metadata']['content'] + results['matches'][2]['metadata']['content'] + results['matches'][3]['metadata']['content']]
     return "\n".join(results)  
 
 
