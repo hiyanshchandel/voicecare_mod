@@ -1,23 +1,22 @@
 from openai import OpenAI
 from langchain.vectorstores import Pinecone
-from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.memory import ConversationBufferMemory
 from pinecone import Pinecone as  pie
 from langchain.chat_models import ChatOpenAI
 from router import routing
 import os
+from embeddings import create_embeddings
 from langchain_community.chat_models import ChatOpenAI
 from dotenv import load_dotenv
 load_dotenv()
 pc = pie(api_key = os.environ.get("PINECONE_API_KEY"))
-index = pc.Index(host = "https://voicecaretest3-hilv8lk.svc.aped-4627-b74a.pinecone.io")
-embedding_model = HuggingFaceEmbeddings(model_name=os.environ.get("EMBEDDING_MODEL"))
+index = pc.Index("voicecare5")
 memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 llm = ChatOpenAI(base_url="https://api.groq.com/openai/v1",
         api_key=os.environ.get("GROQ_API_KEY"), model_name=os.environ.get("SUMMARY_MODEL_NAME"))
 
 def search_pinecone(query, user_id):
-    query_embedding = embedding_model.embed_query(query)
+    query_embedding = create_embeddings(query)
     results = index.query(namespace = user_id,vector=query_embedding, top_k=2, include_values=False, include_metadata=True)
     results = [results['matches'][0]['metadata']['chunk_text'] + results['matches'][1]['metadata']['chunk_text']]
     return "\n".join(results)  
