@@ -8,4 +8,4 @@ flask
 flask-cors
 groq
 gunicorn
-sentence-transformers
+
