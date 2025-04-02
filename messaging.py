@@ -1,9 +1,13 @@
 from twilio.rest import Client
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 def send_message(notification, phone_number):
-    account_sid = 'AC79844424f42d46579da563a462d8d3f2'
-    auth_token = '6fb96c876e429a27a38aecae836449d2'
+    account_sid =  os.environ.get("TWILIO_SID")
+    auth_token =  os.environ.get("TWILIO_TOKEN")
     client = Client(account_sid, auth_token)
-    message = client.messages.create(from_ = '+16282578173',
+    message = client.messages.create(from_ = '+15612570539',
     body=notification,
     to=str(phone_number)
     )
