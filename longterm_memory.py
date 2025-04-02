@@ -5,7 +5,7 @@ load_dotenv()
 def summarise(chat_history):
     """client = OpenAI(base_url="https://api.groq.com/openai/v1",
         api_key=os.environ.get("GROQ_API_KEY"))"""
-    client = OpenAI(api_key=config.OPENAI_API_KEY)
+    client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
     ## fix summaries of unrequired topics like news etc return nothing to summarise and then use of if model 
     system_prompt = {
         "role": "system",

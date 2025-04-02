@@ -25,6 +25,3 @@ def summary_upsert(username, summary):
     index.upsert(namespace = username, vectors=records)
     send_message(summary, '+919166619120')
     print(f"Summary for User {username} inserted into Pinecone.")
-
-
-    
