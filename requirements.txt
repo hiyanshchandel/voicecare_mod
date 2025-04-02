@@ -1,4 +1,5 @@
 openai
+--upgrade openai
 langchain 
 pinecone
 uuid
@@ -8,4 +9,5 @@ flask
 flask-cors
 groq
 gunicorn
+twilio
 
