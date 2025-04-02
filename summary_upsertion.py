@@ -4,6 +4,8 @@ import uuid
 from embeddings import create_embeddings
 import os
 from dotenv import load_dotenv
+from messaging import send_message
+
 load_dotenv()
 pc = Pinecone(api_key = os.environ.get("PINECONE_API_KEY"))
 
@@ -21,6 +23,7 @@ def summary_upsert(username, summary):
     
     records = [{"id": record_id, "values": create_embeddings(json.dumps(summary, indent=2)), "metadata": metadata}]
     index.upsert(namespace = username, vectors=records)
+    send_message(summary, '+917014158482')
     print(f"Summary for User {username} inserted into Pinecone.")
 
 
