@@ -1,5 +1,4 @@
 openai
---upgrade openai
 langchain 
 pinecone
 uuid
