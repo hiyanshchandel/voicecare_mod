@@ -23,7 +23,7 @@ def summary_upsert(username, summary):
     
     records = [{"id": record_id, "values": create_embeddings(json.dumps(summary, indent=2)), "metadata": metadata}]
     index.upsert(namespace = username, vectors=records)
-    send_message(summary, '+917014158482')
+    send_message(summary, '+919166619120')
     print(f"Summary for User {username} inserted into Pinecone.")
 
 
