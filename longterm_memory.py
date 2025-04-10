@@ -77,7 +77,7 @@ def summarise(chat_history):
         )
     }
 
-    messages = [system_prompt] + chat_history 
+    messages = [system_prompt] + chat_history[::2] 
 
     response = client.chat.completions.create(
         model='gpt-4o-mini-2024-07-18',
