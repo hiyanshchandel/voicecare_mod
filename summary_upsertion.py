@@ -12,7 +12,7 @@ pc = Pinecone(api_key = os.environ.get("PINECONE_API_KEY"))
 index = pc.Index("voicecare5")
 
 def summary_upsert(username, summary):
-    if not summary or summary.strip() == "NO_SUMMARY":
+    if not summary or summary.strip() == "NO_SUMMARY" or summary.strip() == "'NO_SUMMARY'" :
         return
     record_id = str(uuid.uuid4())
     metadata = {
